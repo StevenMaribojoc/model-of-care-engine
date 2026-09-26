@@ -264,15 +264,28 @@ def _any(children: list[Predicate]) -> Predicate:
 
 
 def _code_matches(code: str, prefix: str) -> bool:
-    """Prefix match on a dotted ICD-10 code.
+    """Prefix match that respects ICD-10 structure.
 
-    Requires the match to end at a code boundary so that ``I10`` does not match a
-    hypothetical ``I100``, while ``G47.3`` still matches ``G47.33``.
+    An ICD-10 code is a category (the part before the decimal, e.g. ``G47``)
+    followed by an optional subclassification (``.33``). Everything after the
+    decimal narrows the same condition, so:
+
+    * a prefix that already contains a decimal may extend freely --
+      ``G47.3`` matches ``G47.33``, which the spec requires ("G47.3x -- Sleep
+      Apnea" is in the chronic conditions group);
+    * a bare category prefix must stop at a boundary -- ``I10`` matches ``I10``
+      and ``I10.9`` but not a different category that merely starts with those
+      characters.
+
+    A naive ``startswith`` gets the first case right and the second wrong; a
+    strict boundary check gets it exactly backwards. Both halves matter.
     """
     if not code.startswith(prefix):
         return False
     rest = code[len(prefix) :]
-    return rest == "" or rest[0] == "." or prefix[-1] == "."
+    if rest == "" or "." in prefix:
+        return True
+    return rest[0] == "."
 
 
 def _lab_in_window(facts: PatientFacts, test: str, within_months: int):
