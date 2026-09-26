@@ -152,6 +152,11 @@ class Need:
     target: str  # a specialty for visits, a test name for lab orders
     cadence_days: int
     status: NeedStatus
+    # How this gap should be worked, decided by the resolver because routing is a
+    # property of the need type. None means "a real gap that generates no task" --
+    # the spec's no-PCP-history case. Such needs stay visible and filterable so
+    # those patients do not fall through the cracks; they simply are not staff work.
+    task_type: TaskType | None = None
     last_completed_date: date | None = None
     next_scheduled_date: date | None = None
     due_date: date | None = None
@@ -164,7 +169,12 @@ class Need:
 
     @property
     def is_actionable(self) -> bool:
+        """There is a genuine care gap here, whether or not it creates work."""
         return self.status in (NeedStatus.DUE, NeedStatus.NEVER_SEEN)
+
+    @property
+    def generates_task(self) -> bool:
+        return self.is_actionable and self.task_type is not None
 
 
 @dataclass(frozen=True)

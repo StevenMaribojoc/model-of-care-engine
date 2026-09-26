@@ -20,6 +20,7 @@ from app.domain.models import Enrollment, Need, PatientRecord, RunResult
 from app.engine.facts import build_facts
 from app.engine.resolvers import NeedContext, registered_need_types, resolver_for
 from app.engine.stratify import stratify
+from app.engine.tasks import build_tasks
 from app.rules.schema import RulesBundle
 
 logger = logging.getLogger(__name__)
@@ -61,20 +62,26 @@ def evaluate(
                 resolve = resolver_for(requirement.need_type)
                 needs.append(resolve(requirement, facts, ctx))
 
+    # Tasks are built across the whole population at once rather than per patient,
+    # because merging is a cross-program operation and the merge key spans them.
+    tasks = build_tasks(needs)
+
     result = RunResult(
         as_of=as_of,
         rules_version=rules.version,
         enrollments=tuple(enrollments),
         needs=tuple(needs),
-        tasks=(),
+        tasks=tasks,
         warnings=tuple(warnings),
     )
     logger.info(
-        "evaluated %d patients as of %s: %d enrollments, %d needs, %d warnings",
+        "evaluated %d patients as of %s: %d enrollments, %d needs, %d tasks, "
+        "%d warnings",
         len(records),
         as_of,
         len(enrollments),
         len(needs),
+        len(tasks),
         len(warnings),
     )
     return result

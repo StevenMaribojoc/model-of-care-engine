@@ -19,7 +19,7 @@ from dataclasses import dataclass
 from datetime import timedelta
 from typing import Callable
 
-from app.domain.models import Need, NeedStatus, PatientFacts
+from app.domain.models import Need, NeedStatus, PatientFacts, TaskType
 from app.rules.schema import CompiledNeed, RulesBundle
 
 
@@ -116,9 +116,23 @@ def resolve_visit(
     if last_completed is None:
         # Due immediately: there is no prior visit to measure a cadence from, so
         # the gap is open now rather than N days from some date that never was.
-        return build(NeedStatus.NEVER_SEEN, due_date=facts.as_of)
+        #
+        # requires_referral is read from reference data, so "no task for primary
+        # care" is a property of the PCP row rather than a test for the string
+        # "PCP". A new specialty that happens not to need referrals is a config row.
+        task_type = (
+            TaskType.REFERRAL
+            if ctx.rules.requires_referral(target)
+            else None  # no prior primary care history generates no task
+        )
+        return build(NeedStatus.NEVER_SEEN, task_type=task_type, due_date=facts.as_of)
 
     if facts.as_of > due_date:
-        return build(NeedStatus.DUE, due_date=due_date)
+        # Seen before, so a scheduler can book the follow-up without clinical review.
+        return build(
+            NeedStatus.DUE,
+            task_type=ctx.rules.default_task_type(requirement.need_type),
+            due_date=due_date,
+        )
 
     return build(NeedStatus.SATISFIED, due_date=due_date)
