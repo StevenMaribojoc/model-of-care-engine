@@ -1,0 +1,68 @@
+# Reference data: the clinical vocabulary the programs are written against.
+#
+# Kept separate from programs.yaml because these outlive any individual program.
+# A new program reuses this vocabulary; it rarely adds to it.
+
+specialties:
+  # requires_referral is what turns "referral tasks apply only to specialists, not
+  # primary care" from an `if target == "PCP"` branch into a property of the data.
+  # A new specialty is a row here, not a code change.
+  - code: PCP
+    name: Primary Care
+    requires_referral: false
+  - code: Endocrinology
+    name: Endocrinology
+    requires_referral: true
+  - code: Cardiology
+    name: Cardiology
+    requires_referral: true
+  - code: Podiatry
+    name: Podiatry
+    requires_referral: true
+  - code: Ophthalmology
+    name: Ophthalmology
+    requires_referral: true
+  - code: Nephrology
+    name: Nephrology
+    requires_referral: true
+
+code_sets:
+  # Matched as prefixes of the dotted ICD-10 code, so G47.3 catches G47.33 and
+  # E11 catches E11.65. A production system would resolve these against a
+  # terminology service (an ICD-10 value set) rather than string prefixes.
+  - code: CHRONIC_CONDITIONS
+    name: Chronic Conditions
+    prefixes: [E10, E11, I10, E78, J45, N18, I25, E03, "G47.3", M81]
+  - code: DIABETES
+    name: Diabetes (Type 1 or Type 2)
+    prefixes: [E10, E11]
+
+lab_tests:
+  # Free-text test names are what the source data gives us. Declaring the known
+  # set here means a typo in a program's criteria fails at startup instead of
+  # silently never matching. In production these would be LOINC codes.
+  - HbA1c
+  - LDL Cholesterol
+  - Creatinine
+
+need_types:
+  # Declares what kind of thing a need's `target` names, so the loader can check
+  # every program's targets against the right reference list. Adding the planned
+  # lab_order type means uncommenting a block like the one below and registering a
+  # resolver for it -- no schema change and no change to task generation.
+  - type: visit
+    target_domain: specialty
+    task_type: SCHEDULING # the task type an unmet need produces by default
+  # - type: lab_order
+  #   target_domain: lab_test
+  #   task_type: LAB_ORDER
+
+role_visibility:
+  # Which task types each role is allowed to see. Enforced server-side; the
+  # frontend never decides this for itself.
+  - role: SCHEDULER
+    name: Scheduler
+    task_types: [SCHEDULING]
+  - role: CLINICAL
+    name: Clinical Team
+    task_types: [SCHEDULING, REFERRAL]

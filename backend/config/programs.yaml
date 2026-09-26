@@ -1,0 +1,85 @@
+# Clinical programs: eligibility, risk stratification, and the care each tier needs.
+#
+# This file is the whole specification of both programs. Adding a third program that
+# reuses the existing predicates (age, diagnosis code sets, lab thresholds) is an edit
+# here with no Python change at all.
+#
+# Tiers are evaluated top to bottom and the FIRST match wins, so they must be ordered
+# from most to least specific. Empty criteria ({}) always matches and acts as a
+# catch-all, which is how "all other eligible patients" is expressed.
+#
+# priority: 1 = most urgent. Used to sort worklists and to rank merged tasks. The
+# spec does not define a priority scheme; this one is ours and is documented as an
+# assumption in the README.
+
+programs:
+  - code: PCP_WELLNESS
+    name: Primary Care Wellness
+    description: Ensure all patients see their PCP at least once a year.
+    eligibility:
+      age_gte: 18
+    tiers:
+      - code: HIGH_PRIORITY
+        name: High Priority
+        priority: 2
+        criteria:
+          any:
+            - age_gte: 65
+            - has_diagnosis: CHRONIC_CONDITIONS
+        needs:
+          - { type: visit, target: PCP, every_days: 180 }
+
+      - code: STANDARD
+        name: Standard
+        priority: 3
+        criteria: {} # catch-all: all other eligible patients
+        needs:
+          - { type: visit, target: PCP, every_days: 365 }
+
+  - code: DIABETES_MGMT
+    name: Diabetes Management
+    description: Ensure diabetic patients receive appropriate specialist care by risk level.
+    eligibility:
+      has_diagnosis: DIABETES
+    tiers:
+      - code: HIGH_RISK
+        name: High Risk
+        priority: 1
+        criteria:
+          lab_latest: { test: HbA1c, within_months: 6, gte: 9.0 }
+        needs:
+          - { type: visit, target: Endocrinology, every_days: 90 }
+          - { type: visit, target: Cardiology, every_days: 90 }
+          - { type: visit, target: Podiatry, every_days: 180 }
+          - { type: visit, target: Ophthalmology, every_days: 365 }
+          - { type: visit, target: Nephrology, every_days: 180 }
+
+      - code: MODERATE_RISK
+        name: Moderate Risk
+        priority: 2
+        criteria:
+          lab_latest: { test: HbA1c, within_months: 6, gte: 7.0, lt: 9.0 }
+        needs:
+          - { type: visit, target: Endocrinology, every_days: 180 }
+          - { type: visit, target: Ophthalmology, every_days: 365 }
+          - { type: visit, target: Podiatry, every_days: 365 }
+
+      - code: LOW_RISK
+        name: Low Risk
+        priority: 3
+        criteria:
+          lab_latest: { test: HbA1c, within_months: 6, lt: 7.0 }
+        needs:
+          - { type: visit, target: Endocrinology, every_days: 365 }
+          - { type: visit, target: Ophthalmology, every_days: 365 }
+
+      - code: UNMONITORED
+        name: Unmonitored
+        priority: 1 # no current A1C is itself urgent: we are flying blind
+        criteria:
+          lab_missing: { test: HbA1c, within_months: 6 }
+        needs:
+          - type: visit
+            target: Endocrinology
+            every_days: 90
+            note: "Priority: get labs done"
