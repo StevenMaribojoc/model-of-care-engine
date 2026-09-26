@@ -1,0 +1,313 @@
+patient_id,icd_code,description,diagnosed_date
+P0028,E11.40,Type 2 diabetes with diabetic neuropathy,2024-12-13
+P0028,I10,Essential hypertension,2024-09-20
+P0028,E78.5,"Hyperlipidemia, unspecified",2025-02-21
+P0057,E11.9,Type 2 diabetes without complications,2023-08-01
+P0032,E11.22,Type 2 diabetes with chronic kidney disease,2024-12-27
+P0032,I10,Essential hypertension,2023-08-14
+P0032,I25.10,Atherosclerotic heart disease,2026-01-14
+P0215,E11.22,Type 2 diabetes with chronic kidney disease,2021-04-22
+P0215,I10,Essential hypertension,2023-12-09
+P0198,E11.40,Type 2 diabetes with diabetic neuropathy,2022-05-28
+P0198,I10,Essential hypertension,2023-06-12
+P0198,N18.3,"Chronic kidney disease, stage 3",2023-09-29
+P0129,E11.65,Type 2 diabetes with hyperglycemia,2023-01-06
+P0037,E10.65,Type 1 diabetes with hyperglycemia,2021-10-18
+P0099,E11.40,Type 2 diabetes with diabetic neuropathy,2023-05-11
+P0099,I10,Essential hypertension,2022-07-15
+P0099,I25.9,Chronic ischemic heart disease,2024-10-05
+P0106,E11.22,Type 2 diabetes with chronic kidney disease,2024-06-13
+P0106,I10,Essential hypertension,2026-03-11
+P0277,E11.22,Type 2 diabetes with chronic kidney disease,2025-10-26
+P0277,I10,Essential hypertension,2025-08-04
+P0277,E78.0,Pure hypercholesterolemia,2025-06-15
+P0255,E11.40,Type 2 diabetes with diabetic neuropathy,2024-04-15
+P0206,E11.9,Type 2 diabetes without complications,2023-12-16
+P0206,I10,Essential hypertension,2024-07-01
+P0031,E11.9,Type 2 diabetes without complications,2021-12-17
+P0101,E10.10,Type 1 diabetes with ketoacidosis,2022-06-22
+P0101,I25.10,Atherosclerotic heart disease,2023-09-22
+P0233,E10.65,Type 1 diabetes with hyperglycemia,2022-06-02
+P0083,E11.22,Type 2 diabetes with chronic kidney disease,2023-01-29
+P0258,E11.40,Type 2 diabetes with diabetic neuropathy,2024-05-28
+P0258,I10,Essential hypertension,2024-02-11
+P0002,E11.65,Type 2 diabetes with hyperglycemia,2025-09-11
+P0256,E11.65,Type 2 diabetes with hyperglycemia,2023-08-11
+P0256,I10,Essential hypertension,2025-06-18
+P0207,E11.65,Type 2 diabetes with hyperglycemia,2021-11-17
+P0207,I10,Essential hypertension,2022-11-07
+P0061,E10.65,Type 1 diabetes with hyperglycemia,2023-08-04
+P0061,I10,Essential hypertension,2025-12-16
+P0118,E11.65,Type 2 diabetes with hyperglycemia,2022-04-02
+P0118,I10,Essential hypertension,2023-02-03
+P0076,E11.40,Type 2 diabetes with diabetic neuropathy,2021-07-03
+P0076,I10,Essential hypertension,2024-02-22
+P0151,E11.40,Type 2 diabetes with diabetic neuropathy,2022-10-17
+P0151,N18.3,"Chronic kidney disease, stage 3",2025-01-10
+P0069,E11.40,Type 2 diabetes with diabetic neuropathy,2026-02-05
+P0069,J45.40,Moderate persistent asthma,2024-01-15
+P0243,E11.40,Type 2 diabetes with diabetic neuropathy,2025-08-17
+P0243,I25.10,Atherosclerotic heart disease,2023-10-14
+P0036,E11.9,Type 2 diabetes without complications,2025-11-27
+P0036,I10,Essential hypertension,2025-01-01
+P0100,E10.10,Type 1 diabetes with ketoacidosis,2024-03-05
+P0100,E03.9,"Hypothyroidism, unspecified",2025-07-19
+P0102,E11.65,Type 2 diabetes with hyperglycemia,2022-04-05
+P0102,I10,Essential hypertension,2023-05-31
+P0098,E11.40,Type 2 diabetes with diabetic neuropathy,2021-07-27
+P0012,E11.40,Type 2 diabetes with diabetic neuropathy,2024-02-13
+P0012,I10,Essential hypertension,2022-12-24
+P0081,E11.40,Type 2 diabetes with diabetic neuropathy,2024-08-13
+P0081,I10,Essential hypertension,2024-12-11
+P0240,E11.9,Type 2 diabetes without complications,2025-12-25
+P0200,E11.22,Type 2 diabetes with chronic kidney disease,2021-06-10
+P0200,I10,Essential hypertension,2023-03-14
+P0137,E11.9,Type 2 diabetes without complications,2026-02-03
+P0137,I10,Essential hypertension,2023-07-20
+P0027,E11.40,Type 2 diabetes with diabetic neuropathy,2024-03-01
+P0027,I10,Essential hypertension,2026-02-10
+P0027,J45.20,Mild intermittent asthma,2024-04-03
+P0053,E11.65,Type 2 diabetes with hyperglycemia,2022-07-17
+P0053,I10,Essential hypertension,2023-12-31
+P0025,E11.22,Type 2 diabetes with chronic kidney disease,2023-08-30
+P0004,E11.9,Type 2 diabetes without complications,2023-11-26
+P0004,I10,Essential hypertension,2025-03-16
+P0093,E11.65,Type 2 diabetes with hyperglycemia,2021-04-30
+P0093,I10,Essential hypertension,2025-12-31
+P0178,E11.22,Type 2 diabetes with chronic kidney disease,2022-12-17
+P0231,E11.22,Type 2 diabetes with chronic kidney disease,2024-11-16
+P0231,I10,Essential hypertension,2023-11-03
+P0231,M81.0,Age-related osteoporosis,2024-12-16
+P0297,E11.9,Type 2 diabetes without complications,2021-08-09
+P0112,E11.22,Type 2 diabetes with chronic kidney disease,2025-02-07
+P0112,I10,Essential hypertension,2022-06-06
+P0286,E10.65,Type 1 diabetes with hyperglycemia,2023-08-20
+P0286,I10,Essential hypertension,2022-06-26
+P0185,E10.10,Type 1 diabetes with ketoacidosis,2023-03-18
+P0185,E03.9,"Hypothyroidism, unspecified",2025-12-14
+P0110,E10.9,Type 1 diabetes without complications,2023-04-19
+P0110,I10,Essential hypertension,2023-03-29
+P0298,E10.10,Type 1 diabetes with ketoacidosis,2022-12-07
+P0298,I10,Essential hypertension,2023-01-02
+P0077,E11.9,Type 2 diabetes without complications,2025-02-05
+P0161,E11.9,Type 2 diabetes without complications,2025-06-17
+P0261,E10.65,Type 1 diabetes with hyperglycemia,2022-09-30
+P0261,I10,Essential hypertension,2024-11-19
+P0265,E11.65,Type 2 diabetes with hyperglycemia,2023-12-08
+P0062,E10.65,Type 1 diabetes with hyperglycemia,2024-04-04
+P0062,I10,Essential hypertension,2022-08-03
+P0068,E11.9,Type 2 diabetes without complications,2023-03-17
+P0068,I10,Essential hypertension,2025-06-24
+P0244,E10.10,Type 1 diabetes with ketoacidosis,2023-01-22
+P0244,E78.5,"Hyperlipidemia, unspecified",2026-01-07
+P0276,E11.9,Type 2 diabetes without complications,2023-01-16
+P0276,N18.3,"Chronic kidney disease, stage 3",2024-06-16
+P0135,E11.9,Type 2 diabetes without complications,2024-07-08
+P0136,E11.65,Type 2 diabetes with hyperglycemia,2022-01-05
+P0180,E11.40,Type 2 diabetes with diabetic neuropathy,2023-06-09
+P0180,I10,Essential hypertension,2025-04-12
+P0180,N18.4,"Chronic kidney disease, stage 4",2023-05-13
+P0239,E10.9,Type 1 diabetes without complications,2022-05-10
+P0239,I10,Essential hypertension,2022-04-23
+P0125,E11.22,Type 2 diabetes with chronic kidney disease,2023-01-14
+P0125,I10,Essential hypertension,2024-06-08
+P0078,E11.65,Type 2 diabetes with hyperglycemia,2025-11-27
+P0078,I10,Essential hypertension,2023-12-01
+P0204,E11.22,Type 2 diabetes with chronic kidney disease,2023-09-20
+P0122,E11.40,Type 2 diabetes with diabetic neuropathy,2023-04-20
+P0122,I25.10,Atherosclerotic heart disease,2023-05-24
+P0144,E11.9,Type 2 diabetes without complications,2022-06-21
+P0266,E11.22,Type 2 diabetes with chronic kidney disease,2025-04-10
+P0266,M81.0,Age-related osteoporosis,2024-09-19
+P0163,E11.65,Type 2 diabetes with hyperglycemia,2024-08-13
+P0014,E11.65,Type 2 diabetes with hyperglycemia,2021-07-22
+P0284,E11.22,Type 2 diabetes with chronic kidney disease,2023-12-12
+P0284,M81.0,Age-related osteoporosis,2023-05-04
+P0092,E11.65,Type 2 diabetes with hyperglycemia,2024-12-31
+P0092,I10,Essential hypertension,2025-10-11
+P0285,E11.65,Type 2 diabetes with hyperglycemia,2024-02-26
+P0285,E78.5,"Hyperlipidemia, unspecified",2023-11-18
+P0191,E11.9,Type 2 diabetes without complications,2025-08-25
+P0191,I10,Essential hypertension,2025-03-21
+P0201,E11.40,Type 2 diabetes with diabetic neuropathy,2022-12-10
+P0201,I10,Essential hypertension,2025-05-11
+P0208,E11.40,Type 2 diabetes with diabetic neuropathy,2023-02-21
+P0208,I10,Essential hypertension,2022-05-11
+P0143,E10.9,Type 1 diabetes without complications,2025-01-14
+P0143,I10,Essential hypertension,2022-10-16
+P0127,E11.65,Type 2 diabetes with hyperglycemia,2022-09-21
+P0041,E10.65,Type 1 diabetes with hyperglycemia,2023-11-21
+P0041,I10,Essential hypertension,2023-04-07
+P0043,E10.65,Type 1 diabetes with hyperglycemia,2025-10-12
+P0187,E11.65,Type 2 diabetes with hyperglycemia,2021-05-04
+P0091,E11.22,Type 2 diabetes with chronic kidney disease,2023-09-28
+P0091,E78.5,"Hyperlipidemia, unspecified",2025-05-17
+P0290,E11.9,Type 2 diabetes without complications,2021-12-04
+P0290,I10,Essential hypertension,2024-11-04
+P0290,I25.10,Atherosclerotic heart disease,2025-12-19
+P0030,E11.9,Type 2 diabetes without complications,2021-12-02
+P0030,I10,Essential hypertension,2022-08-13
+P0235,E11.65,Type 2 diabetes with hyperglycemia,2023-08-15
+P0186,E11.40,Type 2 diabetes with diabetic neuropathy,2022-04-21
+P0210,E11.9,Type 2 diabetes without complications,2023-12-30
+P0210,I25.10,Atherosclerotic heart disease,2025-10-03
+P0238,E11.22,Type 2 diabetes with chronic kidney disease,2024-12-16
+P0238,I10,Essential hypertension,2026-02-01
+P0213,E11.9,Type 2 diabetes without complications,2025-01-15
+P0089,E11.65,Type 2 diabetes with hyperglycemia,2023-09-18
+P0089,N18.4,"Chronic kidney disease, stage 4",2025-06-11
+P0289,E11.65,Type 2 diabetes with hyperglycemia,2021-05-08
+P0289,I25.9,Chronic ischemic heart disease,2026-01-24
+P0184,E10.10,Type 1 diabetes with ketoacidosis,2025-07-01
+P0184,I10,Essential hypertension,2023-08-21
+P0059,E11.9,Type 2 diabetes without complications,2024-05-16
+P0296,E11.40,Type 2 diabetes with diabetic neuropathy,2023-10-11
+P0018,E10.65,Type 1 diabetes with hyperglycemia,2023-01-22
+P0018,I10,Essential hypertension,2025-01-27
+P0249,E11.40,Type 2 diabetes with diabetic neuropathy,2023-08-07
+P0249,I10,Essential hypertension,2025-05-13
+P0249,E78.5,"Hyperlipidemia, unspecified",2024-12-28
+P0257,E10.9,Type 1 diabetes without complications,2022-06-12
+P0171,E11.65,Type 2 diabetes with hyperglycemia,2025-11-12
+P0171,I10,Essential hypertension,2024-10-31
+P0237,E11.40,Type 2 diabetes with diabetic neuropathy,2025-04-21
+P0225,E11.9,Type 2 diabetes without complications,2021-04-19
+P0225,I10,Essential hypertension,2025-11-02
+P0252,E11.22,Type 2 diabetes with chronic kidney disease,2025-03-22
+P0252,I10,Essential hypertension,2023-03-17
+P0241,E11.40,Type 2 diabetes with diabetic neuropathy,2021-11-20
+P0241,I10,Essential hypertension,2023-05-21
+P0241,I25.10,Atherosclerotic heart disease,2024-06-29
+P0121,E11.9,Type 2 diabetes without complications,2025-04-21
+P0121,I10,Essential hypertension,2024-08-10
+P0121,M81.0,Age-related osteoporosis,2023-12-23
+P0220,E11.40,Type 2 diabetes with diabetic neuropathy,2023-11-07
+P0196,E11.40,Type 2 diabetes with diabetic neuropathy,2021-04-23
+P0196,I10,Essential hypertension,2022-07-23
+P0179,E11.40,Type 2 diabetes with diabetic neuropathy,2024-02-20
+P0071,E11.9,Type 2 diabetes without complications,2025-05-20
+P0071,M81.0,Age-related osteoporosis,2025-02-02
+P0138,E11.40,Type 2 diabetes with diabetic neuropathy,2023-08-20
+P0168,E11.22,Type 2 diabetes with chronic kidney disease,2023-07-08
+P0234,E11.9,Type 2 diabetes without complications,2022-01-22
+P0234,I10,Essential hypertension,2025-02-27
+P0234,E03.9,"Hypothyroidism, unspecified",2025-01-16
+P0147,E11.9,Type 2 diabetes without complications,2022-05-31
+P0147,I10,Essential hypertension,2023-12-01
+P0209,E10.10,Type 1 diabetes with ketoacidosis,2025-04-08
+P0019,E11.22,Type 2 diabetes with chronic kidney disease,2025-04-08
+P0019,I10,Essential hypertension,2024-04-05
+P0003,E11.40,Type 2 diabetes with diabetic neuropathy,2025-01-24
+P0148,E11.40,Type 2 diabetes with diabetic neuropathy,2025-10-26
+P0148,I10,Essential hypertension,2022-11-19
+P0148,J45.20,Mild intermittent asthma,2023-08-01
+P0045,E11.9,Type 2 diabetes without complications,2022-10-13
+P0045,N18.3,"Chronic kidney disease, stage 3",2024-09-09
+P0117,E11.65,Type 2 diabetes with hyperglycemia,2025-02-27
+P0117,E03.9,"Hypothyroidism, unspecified",2023-06-20
+P0001,E03.9,"Hypothyroidism, unspecified",2026-02-25
+P0007,N18.4,"Chronic kidney disease, stage 4",2024-02-25
+P0007,J45.20,Mild intermittent asthma,2025-09-07
+P0011,N18.4,"Chronic kidney disease, stage 4",2025-09-15
+P0015,I10,Essential hypertension,2025-06-16
+P0016,I25.10,Atherosclerotic heart disease,2024-11-02
+P0016,J45.20,Mild intermittent asthma,2025-03-28
+P0020,M81.0,Age-related osteoporosis,2024-09-01
+P0021,J45.20,Mild intermittent asthma,2023-10-21
+P0021,J45.40,Moderate persistent asthma,2022-04-13
+P0023,M81.0,Age-related osteoporosis,2023-05-27
+P0023,I25.9,Chronic ischemic heart disease,2021-07-07
+P0023,E78.0,Pure hypercholesterolemia,2023-09-09
+P0024,E78.5,"Hyperlipidemia, unspecified",2024-07-24
+P0034,E78.5,"Hyperlipidemia, unspecified",2021-07-05
+P0035,I10,Essential hypertension,2025-08-16
+P0047,N18.3,"Chronic kidney disease, stage 3",2022-07-09
+P0047,I25.9,Chronic ischemic heart disease,2022-04-26
+P0050,N18.4,"Chronic kidney disease, stage 4",2021-10-20
+P0051,G47.33,Obstructive sleep apnea,2023-02-22
+P0051,N18.3,"Chronic kidney disease, stage 3",2023-04-23
+P0052,E03.9,"Hypothyroidism, unspecified",2024-06-07
+P0052,I25.9,Chronic ischemic heart disease,2025-11-26
+P0052,I25.10,Atherosclerotic heart disease,2025-07-03
+P0055,I25.10,Atherosclerotic heart disease,2024-11-20
+P0055,J45.20,Mild intermittent asthma,2024-09-22
+P0058,N18.3,"Chronic kidney disease, stage 3",2023-06-05
+P0064,J45.40,Moderate persistent asthma,2021-06-04
+P0067,I25.10,Atherosclerotic heart disease,2021-07-13
+P0067,M81.0,Age-related osteoporosis,2022-12-13
+P0072,E78.0,Pure hypercholesterolemia,2022-03-23
+P0084,J45.20,Mild intermittent asthma,2023-08-31
+P0084,G47.33,Obstructive sleep apnea,2025-12-21
+P0085,M81.0,Age-related osteoporosis,2025-06-11
+P0094,N18.3,"Chronic kidney disease, stage 3",2021-07-01
+P0095,J45.40,Moderate persistent asthma,2024-05-31
+P0096,J45.40,Moderate persistent asthma,2023-06-18
+P0096,N18.4,"Chronic kidney disease, stage 4",2023-10-25
+P0104,I25.9,Chronic ischemic heart disease,2024-11-18
+P0104,I10,Essential hypertension,2025-04-29
+P0111,E78.0,Pure hypercholesterolemia,2024-09-08
+P0111,J45.40,Moderate persistent asthma,2021-10-09
+P0111,G47.33,Obstructive sleep apnea,2022-11-12
+P0115,I25.10,Atherosclerotic heart disease,2024-04-11
+P0115,E78.5,"Hyperlipidemia, unspecified",2022-07-09
+P0116,I25.9,Chronic ischemic heart disease,2022-12-10
+P0120,M81.0,Age-related osteoporosis,2023-05-19
+P0120,G47.33,Obstructive sleep apnea,2021-05-07
+P0126,E03.9,"Hypothyroidism, unspecified",2023-07-01
+P0131,M81.0,Age-related osteoporosis,2022-06-22
+P0131,N18.3,"Chronic kidney disease, stage 3",2023-08-08
+P0134,E03.9,"Hypothyroidism, unspecified",2025-12-19
+P0139,G47.33,Obstructive sleep apnea,2025-10-08
+P0141,I25.9,Chronic ischemic heart disease,2024-11-25
+P0141,I25.10,Atherosclerotic heart disease,2024-05-14
+P0142,J45.40,Moderate persistent asthma,2022-05-24
+P0142,E78.0,Pure hypercholesterolemia,2025-05-10
+P0149,J45.20,Mild intermittent asthma,2022-11-19
+P0149,E78.0,Pure hypercholesterolemia,2024-10-04
+P0150,I25.10,Atherosclerotic heart disease,2023-10-24
+P0152,M81.0,Age-related osteoporosis,2022-02-21
+P0152,E03.9,"Hypothyroidism, unspecified",2024-06-16
+P0157,J45.20,Mild intermittent asthma,2025-04-12
+P0162,I25.10,Atherosclerotic heart disease,2023-10-14
+P0162,M81.0,Age-related osteoporosis,2023-04-19
+P0166,E78.0,Pure hypercholesterolemia,2026-02-06
+P0166,J45.40,Moderate persistent asthma,2025-12-02
+P0169,J45.40,Moderate persistent asthma,2025-05-26
+P0172,I10,Essential hypertension,2026-01-18
+P0174,N18.4,"Chronic kidney disease, stage 4",2025-08-07
+P0189,E03.9,"Hypothyroidism, unspecified",2025-05-25
+P0192,E78.0,Pure hypercholesterolemia,2023-07-06
+P0193,J45.20,Mild intermittent asthma,2026-01-15
+P0203,E03.9,"Hypothyroidism, unspecified",2024-06-16
+P0216,I25.10,Atherosclerotic heart disease,2022-08-02
+P0217,I10,Essential hypertension,2025-01-13
+P0218,N18.3,"Chronic kidney disease, stage 3",2023-11-02
+P0218,N18.4,"Chronic kidney disease, stage 4",2021-07-19
+P0218,I25.10,Atherosclerotic heart disease,2021-07-05
+P0221,I25.9,Chronic ischemic heart disease,2025-12-09
+P0221,G47.33,Obstructive sleep apnea,2022-10-27
+P0224,E78.5,"Hyperlipidemia, unspecified",2023-05-26
+P0228,E78.0,Pure hypercholesterolemia,2022-09-12
+P0228,I25.9,Chronic ischemic heart disease,2023-05-25
+P0230,N18.3,"Chronic kidney disease, stage 3",2024-01-07
+P0242,I25.10,Atherosclerotic heart disease,2022-07-30
+P0242,E78.5,"Hyperlipidemia, unspecified",2021-09-19
+P0246,E78.5,"Hyperlipidemia, unspecified",2023-04-26
+P0253,G47.33,Obstructive sleep apnea,2023-12-21
+P0263,E03.9,"Hypothyroidism, unspecified",2022-03-10
+P0264,E03.9,"Hypothyroidism, unspecified",2022-02-09
+P0267,E78.5,"Hyperlipidemia, unspecified",2024-03-08
+P0271,G47.33,Obstructive sleep apnea,2021-10-07
+P0271,J45.40,Moderate persistent asthma,2022-07-02
+P0278,E03.9,"Hypothyroidism, unspecified",2025-09-28
+P0278,E78.5,"Hyperlipidemia, unspecified",2024-07-21
+P0280,J45.40,Moderate persistent asthma,2025-05-07
+P0280,E78.5,"Hyperlipidemia, unspecified",2025-02-17
+P0281,E03.9,"Hypothyroidism, unspecified",2021-09-02
+P0282,E78.0,Pure hypercholesterolemia,2021-05-18
+P0287,I25.9,Chronic ischemic heart disease,2023-08-22
+P0287,G47.33,Obstructive sleep apnea,2025-12-02
+P0288,I25.10,Atherosclerotic heart disease,2024-09-25
+P0295,E03.9,"Hypothyroidism, unspecified",2025-12-04
+P0295,I25.9,Chronic ischemic heart disease,2021-04-17
+P0079,J45.40,Moderate persistent asthma,2024-07-27
