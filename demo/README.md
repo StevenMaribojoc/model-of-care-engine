@@ -23,6 +23,27 @@ clinical facts rather than stored and ticked off by hand.
 always the shipped dataset. `simulate-visit.sh` refuses to run on an already
 modified CSV, so two demos cannot stack.
 
+## Add a whole program without touching code
+
+```bash
+./demo/add-program.sh
+```
+
+Appends a Chronic Kidney Disease program to `backend/config/programs.yaml` and
+the code set it needs to `reference.yaml`, then reloads. Prints before and
+after: the program count, the rules version hash, how many patients enrolled,
+and how many tasks are now driven by more than one program.
+
+That last number is the interesting one. It goes from 0 to 2, because the new
+program wants Cardiology for patients the diabetes program also wants seen --
+so one appointment serves both, which is what the needs/tasks split exists for.
+The two programs in the original spec target different specialties, so nothing
+merges until a third one overlaps.
+
+```bash
+./demo/reset.sh
+```
+
 ## Keep run history across restarts
 
 ```bash
