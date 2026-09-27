@@ -62,9 +62,13 @@ terminal `cd frontend && npm run dev` (port 5173, proxies `/api` to 8000).
 docker build -t model-of-care . && docker run -p 8000:8000 model-of-care
 ```
 
-**Honest caveat:** Docker was not available on the development machine, so the
-`Dockerfile` is written from the working local setup but has never been built.
-`./run.sh` is the verified path.
+Then open **http://localhost:8000**. Multi-stage build: Node compiles the SPA,
+which is copied into a Python image that serves it alongside the API. ~300 MB,
+builds in about a minute. The container holds no state — the database is rebuilt
+from the CSVs at startup — so it can be restarted or replaced freely.
+
+Verified: builds clean, reports healthy, and serves identical results to the
+local path (273 tasks, same tier distribution).
 </details>
 
 ### Tests
@@ -191,7 +195,6 @@ Where the spec was ambiguous, I made a call and recorded it.
   ones (reverting the ICD fix, relaxing the cadence to `>=`, letting a never-seen
   PCP produce a referral, making visibility ignore the role) to confirm they
   actually fail — a test that passes while the logic is broken is worse than none.
-- **The Dockerfile is unbuilt**, as noted above.
 - **The UI was verified by contract, not visually.** No browser was available in
   the development environment, so every field each component reads was checked
   against live API responses and TypeScript strict mode compiles clean, but the

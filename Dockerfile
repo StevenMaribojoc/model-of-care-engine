@@ -1,10 +1,9 @@
 # Multi-stage build: compile the SPA with Node, then serve it and the API from a
 # single Python image on one port.
 #
-# NOTE: Docker was not available on the machine this was developed on, so this
-# file is written from the working local setup but has NOT been built or run.
-# The verified path is ./run.sh -- see the README. Treat this as the intended
-# container shape rather than as a tested artifact.
+# Verified: builds and runs, reports healthy, and serves the same results as the
+# local path. Built natively for the development machine's architecture; add
+# --platform linux/amd64 when building for a typical x86 cloud host.
 
 # --- stage 1: frontend -------------------------------------------------------
 FROM node:22-alpine AS frontend
