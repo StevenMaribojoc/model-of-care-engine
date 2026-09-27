@@ -32,6 +32,7 @@ from app.services.views import (
     PatientView,
     RunInfo,
     SummaryView,
+    TaskSource,
     TaskView,
 )
 
@@ -182,11 +183,10 @@ def list_tasks(
         .offset(offset)
     ).all()
 
-    task_ids = [task.id for task, _ in rows]
-    programs_by_task = _programs_for_tasks(session, task_ids)
+    sources_by_task = _sources_for_tasks(session, [task.id for task, _ in rows])
 
     items = [
-        _to_task_view(task, patient, as_of, programs_by_task.get(task.id, []))
+        _to_task_view(task, patient, as_of, sources_by_task.get(task.id, []))
         for task, patient in rows
     ]
     return Page(total=total or 0, limit=limit, offset=offset, items=items)
@@ -227,22 +227,45 @@ def _apply_task_filters(
     return query
 
 
-def _programs_for_tasks(session: Session, task_ids: list[int]) -> dict[int, list[str]]:
-    """One query for the whole page rather than one per task."""
+def _sources_for_tasks(
+    session: Session, task_ids: list[int]
+) -> dict[int, list[TaskSource]]:
+    """Which program and tier drove each task. One query for the whole page.
+
+    Walks task -> task_need -> clinical_need -> enrollment -> program/tier. That
+    chain is the audit trail: every task can name the exact rule that produced it.
+    """
     if not task_ids:
         return {}
     rows = session.execute(
-        select(db.TaskNeed.task_id, db.Program.code)
+        select(
+            db.TaskNeed.task_id,
+            db.Program.code,
+            db.Program.name,
+            db.RiskTier.code,
+            db.RiskTier.name,
+        )
         .join(db.ClinicalNeed, db.ClinicalNeed.id == db.TaskNeed.need_id)
         .join(db.Enrollment, db.Enrollment.id == db.ClinicalNeed.enrollment_id)
         .join(db.Program, db.Program.program_id == db.Enrollment.program_id)
+        .outerjoin(db.RiskTier, db.RiskTier.tier_id == db.Enrollment.tier_id)
         .where(db.TaskNeed.task_id.in_(task_ids))
         .distinct()
     ).all()
-    grouped: dict[int, list[str]] = defaultdict(list)
-    for task_id, code in rows:
-        grouped[task_id].append(code)
-    return {task_id: sorted(codes) for task_id, codes in grouped.items()}
+    grouped: dict[int, list[TaskSource]] = defaultdict(list)
+    for task_id, program_code, program_name, tier_code, tier_name in rows:
+        grouped[task_id].append(
+            TaskSource(
+                program_code=program_code,
+                program_name=program_name,
+                tier_code=tier_code,
+                tier_name=tier_name,
+            )
+        )
+    return {
+        task_id: sorted(sources, key=lambda s: s.program_code)
+        for task_id, sources in grouped.items()
+    }
 
 
 # --------------------------------------------------------------------------- #
@@ -535,7 +558,7 @@ def _to_patient_summary(patient: db.Patient, as_of: date) -> PatientSummary:
 
 
 def _to_task_view(
-    task: db.Task, patient: db.Patient, as_of: date, program_codes: list[str]
+    task: db.Task, patient: db.Patient, as_of: date, sources: list[TaskSource]
 ) -> TaskView:
     return TaskView(
         task_id=task.id,
@@ -548,7 +571,8 @@ def _to_task_view(
         due_date=task.due_date,
         days_overdue=_days_overdue(task.due_date, as_of),
         status=task.status,
-        program_codes=program_codes,
+        program_codes=sorted({source.program_code for source in sources}),
+        sources=sources,
         patient=_to_patient_summary(patient, as_of),
     )
 
@@ -638,10 +662,10 @@ def _tasks_for(
         )
         .order_by(db.Task.priority, db.Task.due_date)
     ).all()
-    programs_by_task = _programs_for_tasks(session, [task.id for task, _ in rows])
+    sources_by_task = _sources_for_tasks(session, [task.id for task, _ in rows])
     grouped: dict[str, list[TaskView]] = defaultdict(list)
     for task, patient in rows:
         grouped[task.patient_id].append(
-            _to_task_view(task, patient, as_of, programs_by_task.get(task.id, []))
+            _to_task_view(task, patient, as_of, sources_by_task.get(task.id, []))
         )
     return grouped

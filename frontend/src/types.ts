@@ -36,6 +36,13 @@ export interface Need {
   note: string | null;
 }
 
+export interface TaskSource {
+  program_code: string;
+  program_name: string;
+  tier_code: string | null;
+  tier_name: string | null;
+}
+
 export interface Task {
   task_id: number;
   patient_id: string;
@@ -48,6 +55,7 @@ export interface Task {
   days_overdue: number | null;
   status: string;
   program_codes: string[];
+  sources: TaskSource[];
   patient: PatientSummary | null;
 }
 

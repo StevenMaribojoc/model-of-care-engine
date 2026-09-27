@@ -49,6 +49,22 @@ class NeedView:
 
 
 @dataclass(frozen=True)
+class TaskSource:
+    """The program and tier that asked for this work.
+
+    Carried on the task so a worklist row can explain its own urgency. Without
+    it the priority number looks arbitrary: a task can read "P2" while the
+    patient is in a tier literally named "High Risk", because the P2 came from
+    a *different* program's tier.
+    """
+
+    program_code: str
+    program_name: str
+    tier_code: str | None
+    tier_name: str | None
+
+
+@dataclass(frozen=True)
 class TaskView:
     task_id: int
     patient_id: str
@@ -63,6 +79,7 @@ class TaskView:
     # Which programs are driving this one piece of work. Plural because a merged
     # task can be demanded by several.
     program_codes: list[str]
+    sources: list[TaskSource] = field(default_factory=list)
     patient: PatientSummary | None = None
 
 

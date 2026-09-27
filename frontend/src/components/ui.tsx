@@ -28,11 +28,24 @@ export function TaskTypeBadge({ type }: { type: TaskType }) {
   );
 }
 
+/**
+ * Task urgency, labelled P1/P2/P3 rather than High/Medium/Routine.
+ *
+ * The words matter here. A tier is literally named "High Priority", and a task
+ * inherits its number from whichever tier demanded it -- so a patient in "High
+ * Priority" wellness produces a P2 task, while their diabetes tier produces P1.
+ * Labelling that P2 task "Medium" made it look like the row contradicted the
+ * patient's tier. P1/P2/P3 cannot be mistaken for a tier name, and the row now
+ * names its driving tier alongside (see WorklistTable).
+ */
 export function PriorityDot({ priority }: { priority: number }) {
-  const label = priority === 1 ? "High" : priority === 2 ? "Medium" : "Routine";
+  const rank = Math.min(priority, 3);
   return (
-    <span className={`priority priority-${Math.min(priority, 3)}`} title={`Priority ${priority}`}>
-      {label}
+    <span
+      className={`priority priority-${rank}`}
+      title={`Task priority ${priority} — inherited from the risk tier that requires this care`}
+    >
+      P{priority}
     </span>
   );
 }

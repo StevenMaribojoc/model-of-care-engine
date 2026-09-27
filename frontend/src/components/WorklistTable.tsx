@@ -21,6 +21,9 @@ export function WorklistTable({
         {tasks.length < total
           ? `Showing ${tasks.length} of ${total} tasks`
           : `${total} task${total === 1 ? "" : "s"}`}
+        {/* Says it out loud, because a patient with two care gaps legitimately
+            occupies two rows here and that reads as a duplicate otherwise. */}
+        <span className="sub"> — one row per task, so a patient may appear more than once</span>
       </p>
       <div className="table-scroll">
         <table>
@@ -61,8 +64,18 @@ export function WorklistTable({
                   <Overdue days={task.days_overdue} />
                 </td>
                 <td className="sub">
-                  {/* Plural when one appointment serves more than one program. */}
-                  {task.program_codes.join(", ")}
+                  {/* Names the tier, not just the program: the priority column
+                      inherits its number from this tier, so showing them side by
+                      side is what makes "P2" legible. Plural when one appointment
+                      serves more than one program. */}
+                  {task.sources.length
+                    ? task.sources.map((source) => (
+                        <div key={source.program_code}>
+                          {source.program_name}
+                          {source.tier_name ? ` · ${source.tier_name}` : ""}
+                        </div>
+                      ))
+                    : task.program_codes.join(", ")}
                 </td>
               </tr>
             ))}

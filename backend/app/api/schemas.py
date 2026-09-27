@@ -50,6 +50,13 @@ class NeedOut(_Out):
     note: str | None
 
 
+class TaskSourceOut(_Out):
+    program_code: str
+    program_name: str
+    tier_code: str | None
+    tier_name: str | None
+
+
 class TaskOut(_Out):
     task_id: int
     patient_id: str
@@ -62,6 +69,9 @@ class TaskOut(_Out):
     days_overdue: int | None
     status: str
     program_codes: list[str]
+    # The program AND tier that asked for this work, so the priority number on a
+    # worklist row can explain where it came from.
+    sources: list[TaskSourceOut] = []
     patient: PatientSummaryOut | None = None
 
 
