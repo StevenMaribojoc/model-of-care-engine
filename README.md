@@ -32,6 +32,14 @@ there is nothing to migrate and no state to clear between runs.
 PORT=9000 ./run.sh     # different port
 ```
 
+**Keeping run history across restarts.** By default the database is rebuilt at
+every startup, so engine runs do not survive a restart. Set
+`MOC_REBUILD_ON_STARTUP=false` on a later boot to keep the existing database, and
+every run created so far stays queryable — pick any past `as_of` in the UI and you
+are reading a stored result rather than recomputing it. That is the auditability
+property the `(as_of_date, rules_version)` key exists for; retention is a config
+choice, not a schema change.
+
 <details>
 <summary>Manual setup, without the script</summary>
 
