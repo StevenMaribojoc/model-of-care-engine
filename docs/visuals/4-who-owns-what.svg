@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 400" width="1100" height="400" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+  <rect width="1100" height="400" fill="#ffffff"/>
+  <text x="40" y="52" font-size="26" font-weight="700" fill="#1b2733">Who owns which part of a task</text>
+  <text x="40" y="80" font-size="16" fill="#6b7885">The two sides never write to the same field, so they can never disagree.</text>
+
+  <rect x="40" y="112" width="500" height="236" rx="10" fill="#eaf2fc" stroke="#b9d3f0"/>
+  <text x="64" y="146" font-size="17" font-weight="700" fill="#1b2733">THE ENGINE OWNS</text>
+  <text x="64" y="170" font-size="14" fill="#6b7885">recomputed from clinical facts every run</text>
+  <g font-size="16" fill="#1b2733">
+    <text x="64" y="208">· which patient</text>
+    <text x="64" y="238">· which specialty</text>
+    <text x="64" y="268">· due date</text>
+    <text x="64" y="298">· priority</text>
+  </g>
+  <text x="64" y="330" font-size="14" fill="#1b6ac9">a visit arrives → this side updates itself</text>
+
+  <rect x="560" y="112" width="500" height="236" rx="10" fill="#f6f0fc" stroke="#ddc9ef"/>
+  <text x="584" y="146" font-size="17" font-weight="700" fill="#1b2733">A PERSON OWNS</text>
+  <text x="584" y="170" font-size="14" fill="#6b7885">typed by staff · the engine never touches it</text>
+  <g font-size="16" fill="#1b2733">
+    <text x="584" y="208">· assigned to: Maria</text>
+    <text x="584" y="238">· status: in progress</text>
+    <text x="584" y="268">· note: "called, no answer"</text>
+    <text x="584" y="298">· snoozed until: Nov 3</text>
+  </g>
+  <text x="584" y="330" font-size="14" fill="#8a4bc4">no clinical fact changed → engine stays out</text>
+
+  <rect x="40" y="366" width="1020" height="1" fill="#e6eaef"/>
+  <text x="40" y="392" font-size="14" fill="#6b7885">Today the system builds only the left side. Adding the right side is the next feature, not a fix.</text>
+</svg>

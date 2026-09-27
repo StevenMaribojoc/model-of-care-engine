@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 340" width="1100" height="340" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+  <rect width="1100" height="340" fill="#ffffff"/>
+  <text x="40" y="52" font-size="26" font-weight="700" fill="#1b2733">One patient, five questions</text>
+  <text x="40" y="80" font-size="16" fill="#6b7885">Each step narrows the population. Real numbers from the supplied data.</text>
+
+  <g>
+    <!-- boxes -->
+    <rect x="40"  y="120" width="170" height="86" rx="10" fill="#eef1f5" stroke="#d9dee5"/>
+    <rect x="248" y="120" width="170" height="86" rx="10" fill="#eaf2fc" stroke="#b9d3f0"/>
+    <rect x="456" y="120" width="170" height="86" rx="10" fill="#eaf2fc" stroke="#b9d3f0"/>
+    <rect x="664" y="120" width="170" height="86" rx="10" fill="#fdf1ea" stroke="#f0c4ab"/>
+    <rect x="872" y="120" width="188" height="86" rx="10" fill="#1b6ac9" stroke="#1b6ac9"/>
+
+    <!-- counts -->
+    <text x="125" y="158" font-size="30" font-weight="700" fill="#1b2733" text-anchor="middle">300</text>
+    <text x="333" y="158" font-size="30" font-weight="700" fill="#1b2733" text-anchor="middle">403</text>
+    <text x="541" y="158" font-size="30" font-weight="700" fill="#1b2733" text-anchor="middle">621</text>
+    <text x="749" y="158" font-size="30" font-weight="700" fill="#1b2733" text-anchor="middle">345</text>
+    <text x="966" y="158" font-size="30" font-weight="700" fill="#ffffff" text-anchor="middle">273</text>
+
+    <!-- labels -->
+    <text x="125" y="186" font-size="14" fill="#6b7885" text-anchor="middle">patients</text>
+    <text x="333" y="186" font-size="14" fill="#6b7885" text-anchor="middle">enrollments</text>
+    <text x="541" y="186" font-size="14" fill="#6b7885" text-anchor="middle">needs</text>
+    <text x="749" y="186" font-size="14" fill="#b4460f" text-anchor="middle">open gaps</text>
+    <text x="966" y="186" font-size="14" fill="#dbe8f8" text-anchor="middle">tasks for staff</text>
+
+    <!-- arrows -->
+    <g stroke="#9aa7b4" stroke-width="2" fill="none">
+      <path d="M212 163 h30" marker-end="url(#a)"/>
+      <path d="M420 163 h30" marker-end="url(#a)"/>
+      <path d="M628 163 h30" marker-end="url(#a)"/>
+      <path d="M836 163 h30" marker-end="url(#a)"/>
+    </g>
+
+    <!-- questions -->
+    <text x="226" y="248" font-size="14" fill="#1b2733" text-anchor="middle" font-weight="600">Do they qualify?</text>
+    <text x="434" y="248" font-size="14" fill="#1b2733" text-anchor="middle" font-weight="600">How sick?</text>
+    <text x="642" y="248" font-size="14" fill="#1b2733" text-anchor="middle" font-weight="600">What care?</text>
+    <text x="850" y="248" font-size="14" fill="#1b2733" text-anchor="middle" font-weight="600">Who acts?</text>
+
+    <text x="226" y="270" font-size="13" fill="#6b7885" text-anchor="middle">eligibility</text>
+    <text x="434" y="270" font-size="13" fill="#6b7885" text-anchor="middle">risk tier</text>
+    <text x="642" y="270" font-size="13" fill="#6b7885" text-anchor="middle">vs. their history</text>
+    <text x="850" y="270" font-size="13" fill="#6b7885" text-anchor="middle">scheduler / clinician</text>
+  </g>
+
+  <rect x="40" y="296" width="1020" height="1" fill="#e6eaef"/>
+  <text x="40" y="324" font-size="14" fill="#6b7885">345 gaps produce only 273 tasks: 72 patients have never seen a PCP, which the spec routes to nobody.</text>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#9aa7b4"/></marker></defs>
+</svg>

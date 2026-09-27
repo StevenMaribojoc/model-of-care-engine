@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 400" width="1100" height="400" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+  <rect width="1100" height="400" fill="#ffffff"/>
+  <text x="40" y="52" font-size="26" font-weight="700" fill="#1b2733">A need is not a task</text>
+  <text x="40" y="80" font-size="16" fill="#6b7885">Two programs can want the same visit. The patient still gets one phone call.</text>
+
+  <text x="40" y="126" font-size="13" font-weight="700" fill="#6b7885" letter-spacing="1">NEEDS — clinical, one per program</text>
+  <rect x="40" y="142" width="330" height="72" rx="10" fill="#ffffff" stroke="#d9dee5"/>
+  <text x="60" y="171" font-size="16" font-weight="600" fill="#1b2733">Diabetes Management</text>
+  <text x="60" y="194" font-size="14" fill="#6b7885">wants Cardiology every 90 days</text>
+
+  <rect x="40" y="228" width="330" height="72" rx="10" fill="#ffffff" stroke="#d9dee5"/>
+  <text x="60" y="257" font-size="16" font-weight="600" fill="#1b2733">Chronic Kidney Disease</text>
+  <text x="60" y="280" font-size="14" fill="#6b7885">wants Cardiology every 180 days</text>
+
+  <g stroke="#9aa7b4" stroke-width="2" fill="none">
+    <path d="M378 178 C 440 178, 440 221, 500 221" marker-end="url(#b)"/>
+    <path d="M378 264 C 440 264, 440 221, 500 221" marker-end="url(#b)"/>
+  </g>
+  <text x="440" y="330" font-size="13" fill="#6b7885" text-anchor="middle">merged by</text>
+  <text x="440" y="348" font-size="13" fill="#6b7885" text-anchor="middle">patient + specialty</text>
+
+  <text x="520" y="126" font-size="13" font-weight="700" fill="#6b7885" letter-spacing="1">TASK — operational, one per action</text>
+  <rect x="520" y="178" width="360" height="88" rx="10" fill="#1b6ac9" stroke="#1b6ac9"/>
+  <text x="544" y="212" font-size="18" font-weight="700" fill="#ffffff">Book Cardiology</text>
+  <text x="544" y="238" font-size="14" fill="#dbe8f8">one appointment · strictest due date wins</text>
+  <text x="544" y="256" font-size="13" fill="#a9ccf2">driven by: Diabetes · CKD</text>
+
+  <g stroke="#9aa7b4" stroke-width="2" fill="none"><path d="M888 221 h34" marker-end="url(#b)"/></g>
+  <text x="1010" y="204" font-size="15" font-weight="600" fill="#1b2733" text-anchor="middle">one call</text>
+  <text x="1010" y="226" font-size="15" font-weight="600" fill="#1b2733" text-anchor="middle">to the</text>
+  <text x="1010" y="248" font-size="15" font-weight="600" fill="#1b2733" text-anchor="middle">patient</text>
+
+  <rect x="40" y="366" width="1020" height="1" fill="#e6eaef"/>
+  <text x="40" y="392" font-size="14" fill="#6b7885">The link back to both needs is kept, so closing the one task reports a gap closed for each program.</text>
+  <defs><marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#9aa7b4"/></marker></defs>
+</svg>
