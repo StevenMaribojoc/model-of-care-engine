@@ -1,0 +1,30 @@
+# Render blueprint. With this committed, deploying is: New > Blueprint >
+# pick this repo. Render reads everything below instead of asking.
+#
+# The service is stateless by design -- the database is rebuilt from data/*.csv
+# on every startup -- so there is no disk to attach and a redeploy or restart
+# loses nothing.
+
+services:
+  - type: web
+    name: model-of-care-engine
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: oregon
+
+    # Render probes this to decide the instance is live. It is cheap and does
+    # not depend on a run existing.
+    healthCheckPath: /api/health
+
+    envVars:
+      # Rebuild from the CSVs on every boot. Free instances sleep when idle and
+      # start with an empty filesystem, so this has to stay on.
+      - key: MOC_REBUILD_ON_STARTUP
+        value: "true"
+      # Anchor date for the dataset: the day after the latest clinical record.
+      # Set explicitly here so the hosted demo cannot drift from the README.
+      - key: MOC_DEFAULT_AS_OF
+        value: "2026-04-08"
+      - key: PYTHONUNBUFFERED
+        value: "1"

@@ -34,10 +34,15 @@ COPY --from=frontend /backend/app/static ./backend/app/static
 
 # The SQLite database is rebuilt from data/*.csv on every startup, so the
 # container holds no state and can be restarted or replaced freely.
+# Most hosts (Render, Container Apps, Fly) inject the port to listen on rather
+# than letting the image choose. Default to 8000 so local `docker run` is
+# unchanged, but honour PORT when the platform sets it.
+ENV PORT=8000
 EXPOSE 8000
 WORKDIR /app/backend
 
 HEALTHCHECK --interval=30s --timeout=3s --start-period=20s \
-  CMD python -c "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8000/api/health')"
+  CMD python -c "import os,urllib.request;urllib.request.urlopen(f\"http://127.0.0.1:{os.environ.get('PORT','8000')}/api/health\")"
 
-CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Shell form so ${PORT} is expanded at container start, not frozen at build time.
+CMD python -m uvicorn app.main:app --host 0.0.0.0 --port ${PORT}
