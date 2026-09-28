@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 640" width="1180" height="640" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+  <rect width="1180" height="640" fill="#ffffff"/>
+  <text x="36" y="46" font-size="25" font-weight="700" fill="#1b2733">Schema — and why it splits this way</text>
+  <text x="36" y="72" font-size="15" fill="#6b7885">A conclusion is never stored next to a fact. Everything computed hangs off a run and can be thrown away.</text>
+
+  <!-- SOURCE band -->
+  <rect x="24" y="92" width="1132" height="128" rx="10" fill="#f7f8fa" stroke="#e2e6ea"/>
+  <text x="44" y="116" font-size="13" font-weight="700" fill="#6b7885" letter-spacing="1.2">1 · SOURCE — facts from the EHR, read-only to the engine</text>
+  <g font-size="13">
+    <rect x="44" y="128" width="190" height="72" rx="8" fill="#fff" stroke="#c9d1da"/>
+    <text x="58" y="150" font-weight="700" fill="#1b2733">patient</text>
+    <text x="58" y="170" fill="#6b7885">patient_id  PK</text>
+    <text x="58" y="188" fill="#6b7885">date_of_birth (nullable)</text>
+
+    <rect x="256" y="128" width="190" height="72" rx="8" fill="#fff" stroke="#c9d1da"/>
+    <text x="270" y="150" font-weight="700" fill="#1b2733">diagnosis</text>
+    <text x="270" y="170" fill="#6b7885">patient_id  FK</text>
+    <text x="270" y="188" fill="#6b7885">icd_code, diagnosed_date</text>
+
+    <rect x="468" y="128" width="190" height="72" rx="8" fill="#fff" stroke="#c9d1da"/>
+    <text x="482" y="150" font-weight="700" fill="#1b2733">lab_result</text>
+    <text x="482" y="170" fill="#6b7885">patient_id  FK</text>
+    <text x="482" y="188" fill="#6b7885">test_name, value, date</text>
+
+    <rect x="680" y="128" width="210" height="72" rx="8" fill="#fff" stroke="#c9d1da"/>
+    <text x="694" y="150" font-weight="700" fill="#1b2733">encounter</text>
+    <text x="694" y="170" fill="#6b7885">patient_id  FK</text>
+    <text x="694" y="188" fill="#6b7885">specialty, encounter_date</text>
+  </g>
+  <text x="912" y="152" font-size="13" fill="#1b6ac9">past vs. future is decided</text>
+  <text x="912" y="170" font-size="13" fill="#1b6ac9">by the evaluation date —</text>
+  <text x="912" y="188" font-size="13" fill="#1b6ac9">it is not a stored column</text>
+
+  <!-- RULES band -->
+  <rect x="24" y="236" width="1132" height="128" rx="10" fill="#f2f9f5" stroke="#cfe7da"/>
+  <text x="44" y="260" font-size="13" font-weight="700" fill="#6b7885" letter-spacing="1.2">2 · RULES — seeded from YAML, hashed into a rules_version</text>
+  <g font-size="13">
+    <rect x="44" y="272" width="190" height="72" rx="8" fill="#fff" stroke="#c2ddcd"/>
+    <text x="58" y="294" font-weight="700" fill="#1b2733">program</text>
+    <text x="58" y="314" fill="#6b7885">program_id  PK</text>
+    <text x="58" y="332" fill="#6b7885">code, eligibility</text>
+
+    <rect x="256" y="272" width="190" height="72" rx="8" fill="#fff" stroke="#c2ddcd"/>
+    <text x="270" y="294" font-weight="700" fill="#1b2733">risk_tier</text>
+    <text x="270" y="314" fill="#6b7885">program_id  FK</text>
+    <text x="270" y="332" fill="#6b7885">eval_order, criteria</text>
+
+    <rect x="468" y="272" width="190" height="72" rx="8" fill="#fff" stroke="#c2ddcd"/>
+    <text x="482" y="294" font-weight="700" fill="#1b2733">need_requirement</text>
+    <text x="482" y="314" fill="#6b7885">tier_id  FK</text>
+    <text x="482" y="332" fill="#6b7885">target, cadence_days</text>
+
+    <rect x="680" y="272" width="210" height="72" rx="8" fill="#fff" stroke="#c2ddcd"/>
+    <text x="694" y="294" font-weight="700" fill="#1b2733">specialty</text>
+    <text x="694" y="314" fill="#6b7885">code  PK</text>
+    <text x="694" y="332" fill="#1f7a4d">requires_referral</text>
+  </g>
+  <text x="912" y="304" font-size="13" fill="#1f7a4d">"no referrals for primary</text>
+  <text x="912" y="322" font-size="13" fill="#1f7a4d">care" lives here as data,</text>
+  <text x="912" y="340" font-size="13" fill="#1f7a4d">not as an if-statement</text>
+
+  <!-- DERIVED band -->
+  <rect x="24" y="380" width="1132" height="196" rx="10" fill="#f3f7fd" stroke="#d3e2f4"/>
+  <text x="44" y="404" font-size="13" font-weight="700" fill="#6b7885" letter-spacing="1.2">3 · DERIVED — every row owned by a run; additive, never edited in place</text>
+
+  <g font-size="13">
+    <rect x="44" y="416" width="214" height="80" rx="8" fill="#fff" stroke="#b9d3f0"/>
+    <text x="58" y="438" font-weight="700" fill="#1b2733">engine_run</text>
+    <text x="58" y="458" fill="#6b7885">run_id  PK</text>
+    <text x="58" y="476" fill="#1b6ac9">UNIQUE(as_of, rules_version)</text>
+
+    <rect x="292" y="416" width="200" height="80" rx="8" fill="#fff" stroke="#b9d3f0"/>
+    <text x="306" y="438" font-weight="700" fill="#1b2733">enrollment</text>
+    <text x="306" y="458" fill="#6b7885">run, patient, program</text>
+    <text x="306" y="476" fill="#1b6ac9">tier_id · evidence JSON</text>
+
+    <rect x="526" y="416" width="200" height="80" rx="8" fill="#fff" stroke="#b9d3f0"/>
+    <text x="540" y="438" font-weight="700" fill="#1b2733">clinical_need</text>
+    <text x="540" y="458" fill="#6b7885">enrollment_id  FK</text>
+    <text x="540" y="476" fill="#6b7885">target, cadence, status</text>
+
+    <rect x="760" y="416" width="150" height="80" rx="8" fill="#eaf2fc" stroke="#9cc2ec"/>
+    <text x="774" y="438" font-weight="700" fill="#1b2733">task_need</text>
+    <text x="774" y="458" fill="#6b7885">need_id  FK</text>
+    <text x="774" y="476" fill="#6b7885">task_id  FK</text>
+
+    <rect x="944" y="416" width="190" height="80" rx="8" fill="#1b6ac9" stroke="#1b6ac9"/>
+    <text x="958" y="438" font-weight="700" fill="#ffffff">task</text>
+    <text x="958" y="458" fill="#dbe8f8">task_type, target</text>
+    <text x="958" y="476" fill="#dbe8f8">priority, due_date</text>
+  </g>
+
+  <g stroke="#7f9bbb" stroke-width="1.6" fill="none">
+    <path d="M258 456 h30" marker-end="url(#d)"/>
+    <path d="M492 456 h30" marker-end="url(#d)"/>
+    <path d="M726 456 h30" marker-end="url(#d)"/>
+    <path d="M910 456 h30" marker-end="url(#d)"/>
+  </g>
+
+  <text x="44" y="534" font-size="13.5" fill="#1b2733" font-weight="600">Read that chain as a sentence:</text>
+  <text x="44" y="556" font-size="13.5" fill="#6b7885">this run decided this patient is in this program at this tier, so they need this care, which is unmet, which is this one task.</text>
+
+  <rect x="24" y="592" width="1132" height="1" fill="#e6eaef"/>
+  <text x="36" y="620" font-size="13.5" fill="#6b7885">task_need is many-to-many on purpose: two programs wanting the same visit produce one task that still credits both.</text>
+
+  <defs><marker id="d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#7f9bbb"/></marker></defs>
+</svg>
