@@ -321,3 +321,70 @@ class TaskNeed(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     task_id: Mapped[int] = mapped_column(ForeignKey("task.id"), index=True)
     need_id: Mapped[int] = mapped_column(ForeignKey("clinical_need.id"), index=True)
+
+
+# --------------------------------------------------------------------------- #
+# HUMAN STATE  (prototype -- see README)
+# --------------------------------------------------------------------------- #
+
+
+class TaskState(Base):
+    """What a person did about a task, as opposed to what the engine derived.
+
+    This is the one table in the system that is **not** recomputable. Everything
+    else can be thrown away and rebuilt from the CSVs and the YAML; a note
+    saying "called, left a voicemail" cannot. So it is deliberately built
+    differently from every other table here:
+
+    * **No run_id.** Derived rows belong to a run and are replaced wholesale on
+      the next one. Human state has to survive that, or a nightly re-evaluation
+      would erase everyone's work.
+
+    * **Keyed by what the work *is*, not by a row id.** A task row is recreated
+      with a fresh surrogate id on every run, so a foreign key to it would dangle
+      immediately. `(patient, task_type, need_type, target)` is the natural key --
+      "book this patient a PCP visit" identifies the same job today and tomorrow.
+
+    * **No foreign key to patient either**, so a full source reload cannot
+      cascade into deleting somebody's notes.
+
+    * **Excluded from the startup rebuild** (see db/session.reset_schema).
+
+    Note what a person deliberately *cannot* set: "completed". Completion is a
+    clinical fact -- the visit shows up in the encounter feed, the need becomes
+    satisfied, and the task stops being generated. Letting staff tick a box
+    instead would let the worklist drift away from what actually happened to the
+    patient, which is the failure this whole design exists to prevent.
+    """
+
+    __tablename__ = "task_state"
+    __table_args__ = (
+        UniqueConstraint(
+            "patient_id",
+            "task_type",
+            "need_type",
+            "target",
+            name="uq_task_state_natural_key",
+        ),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+
+    # The natural key: this is the work, described in domain terms.
+    patient_id: Mapped[str] = mapped_column(String(32))
+    task_type: Mapped[str] = mapped_column(String(32))
+    need_type: Mapped[str] = mapped_column(String(32))
+    target: Mapped[str] = mapped_column(String(64))
+
+    # OPEN | IN_PROGRESS | SNOOZED. Not "completed" -- see the note above.
+    status: Mapped[str] = mapped_column(String(32), default="OPEN")
+    assignee: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    note: Mapped[str | None] = mapped_column(String(1000), nullable=True)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, server_default=func.now(), onupdate=func.now()
+    )
+    updated_by_role: Mapped[str | None] = mapped_column(String(32), nullable=True)
+
+    @property
+    def natural_key(self) -> tuple[str, str, str, str]:
+        return (self.patient_id, self.task_type, self.need_type, self.target)

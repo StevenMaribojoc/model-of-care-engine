@@ -310,3 +310,37 @@ ul.plain li:last-child { border-bottom: none; }
 }
 
 code { background: #eef1f5; padding: 1px 4px; border-radius: 3px; font-size: 12px; }
+
+/* ---------- task state (prototype) ---------- */
+
+.task-item { padding: 8px 0 12px; }
+
+.task-state {
+  margin: 8px 0 0 4px;
+  padding: 8px 10px;
+  border-left: 3px solid #ddc9ef;
+  background: #fbf8fe;
+  border-radius: 0 6px 6px 0;
+}
+
+.task-state-row { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+.task-state label { display: flex; flex-direction: column; gap: 3px; }
+.task-state label span { color: var(--muted); font-size: 11px; }
+.task-state select,
+.task-state input { padding: 5px; border: 1px solid var(--border); border-radius: 5px; font: inherit; background: #fff; }
+.task-state select { min-width: 140px; }
+.task-state-note { margin-top: 7px; }
+.task-state-note input { width: 100%; max-width: 460px; }
+
+.task-state button {
+  padding: 6px 14px;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: #fff;
+  border-radius: 5px;
+  font: inherit;
+  cursor: pointer;
+}
+.task-state button:disabled { background: #c6d3e2; border-color: #c6d3e2; cursor: default; }
+
+.note { font-style: italic; max-width: 220px; }

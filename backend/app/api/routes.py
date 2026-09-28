@@ -18,6 +18,8 @@ from app.api.schemas import (
     PatientPageOut,
     SummaryOut,
     TaskPageOut,
+    TaskStateOut,
+    TaskStatePatch,
 )
 from app.db.session import get_session
 from app.domain.models import Role
@@ -187,6 +189,49 @@ def get_patient(
     if detail is None:
         raise HTTPException(status_code=404, detail=f"unknown patient {patient_id}")
     return PatientDetailOut.model_validate(detail)
+
+
+@router.patch(
+    "/tasks/{task_id}/state",
+    response_model=TaskStateOut,
+    summary="Record what a person did about a task (prototype)",
+)
+def set_task_state(
+    task_id: int,
+    patch: TaskStatePatch,
+    session: Annotated[Session, Depends(get_session)],
+    rules: Annotated[RulesBundle, Depends(rules_dep)],
+    role: RoleParam = Role.CLINICAL,
+    as_of: AsOf = None,
+) -> TaskStateOut:
+    """Claim a task, set its status, or leave a note.
+
+    Prototype. This is the only write endpoint in the system, and it writes to
+    the only table that is not recomputable -- everything else is derived from
+    the CSVs and the rule config. State is stored against the natural key
+    (patient, task type, need type, target) rather than the task id, so it
+    survives the engine regenerating tasks on the next run.
+    """
+    run_id, _ = _resolve(session, rules, as_of)
+    try:
+        state = queries.set_task_state(
+            session,
+            run_id=run_id,
+            rules=rules,
+            role=role,
+            task_id=task_id,
+            status=patch.status,
+            assignee=patch.assignee,
+            note=patch.note,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+    if state is None:
+        # Same response whether the task is absent or merely invisible to this
+        # role, so the endpoint cannot be used to enumerate hidden work.
+        raise HTTPException(status_code=404, detail="task not found for this role")
+    return TaskStateOut.model_validate(state)
 
 
 @router.get("/summary", response_model=SummaryOut, summary="Counts for the header")

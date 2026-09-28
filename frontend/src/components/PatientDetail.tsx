@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { api, type Filters } from "../api";
 import type { PatientDetail as Detail } from "../types";
+import { TaskStateControl } from "./TaskStateControl";
 import { Evidence, Overdue, StatusBadge, TaskTypeBadge } from "./ui";
 
 /**
@@ -133,9 +134,29 @@ export function PatientDetail({
               ) : (
                 <ul className="plain">
                   {detail.tasks.map((t) => (
-                    <li key={t.task_id}>
-                      <TaskTypeBadge type={t.task_type} /> {t.target} · due {t.due_date ?? "—"}{" "}
-                      <span className="sub">({t.program_codes.join(", ")})</span>
+                    <li key={t.task_id} className="task-item">
+                      <div>
+                        <TaskTypeBadge type={t.task_type} /> {t.target} · due {t.due_date ?? "—"}{" "}
+                        <span className="sub">({t.program_codes.join(", ")})</span>
+                      </div>
+                      {/* The only writable thing in the app. Everything above it
+                          is derived and read-only. */}
+                      <TaskStateControl
+                        task={t}
+                        filters={filters}
+                        onSaved={(state) =>
+                          setDetail((current) =>
+                            current === null
+                              ? current
+                              : {
+                                  ...current,
+                                  tasks: current.tasks.map((x) =>
+                                    x.task_id === t.task_id ? { ...x, state } : x,
+                                  ),
+                                },
+                          )
+                        }
+                      />
                     </li>
                   ))}
                 </ul>

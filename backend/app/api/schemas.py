@@ -57,6 +57,24 @@ class TaskSourceOut(_Out):
     tier_name: str | None
 
 
+class TaskStateOut(_Out):
+    status: str
+    assignee: str | None
+    note: str | None
+    updated_at: str | None
+    updated_by_role: str | None
+
+
+class TaskStatePatch(BaseModel):
+    """Only the fields supplied are changed, so setting a note cannot clear an
+    assignee. Note the absence of a completion status -- completion is derived
+    from the encounter feed, never typed by a person."""
+
+    status: str | None = None
+    assignee: str | None = None
+    note: str | None = None
+
+
 class TaskOut(_Out):
     task_id: int
     patient_id: str
@@ -72,6 +90,8 @@ class TaskOut(_Out):
     # The program AND tier that asked for this work, so the priority number on a
     # worklist row can explain where it came from.
     sources: list[TaskSourceOut] = []
+    # Human-owned half. Null until somebody touches the task.
+    state: TaskStateOut | None = None
     patient: PatientSummaryOut | None = None
 
 

@@ -237,3 +237,106 @@ def test_summary_counts_gaps_that_generate_no_work(client):
     a number of its own."""
     summary = client.get("/api/summary", params={"role": "CLINICAL"}).json()
     assert summary["unactionable_gaps"] == 72
+
+
+# --------------------------------------------------------------------------- #
+# Human state (prototype)
+# --------------------------------------------------------------------------- #
+
+
+def _first_task(client, **params):
+    body = client.get("/api/tasks", params={"role": "CLINICAL", "limit": 1, **params}).json()
+    return body["items"][0]
+
+
+def test_a_task_starts_with_no_human_state(client):
+    assert _first_task(client)["state"] is None
+
+
+def test_claiming_a_task_records_who_and_what(client):
+    task = _first_task(client, search="P0081", specialty="PCP")
+    body = client.patch(
+        f"/api/tasks/{task['task_id']}/state",
+        params={"role": "CLINICAL"},
+        json={"status": "IN_PROGRESS", "assignee": "Maria Alvarez", "note": "left voicemail"},
+    ).json()
+    assert body["status"] == "IN_PROGRESS"
+    assert body["assignee"] == "Maria Alvarez"
+    assert body["updated_by_role"] == "CLINICAL"
+
+
+def test_a_partial_update_does_not_clear_the_other_fields(client):
+    """Setting a note must not wipe an assignee. Two people edit these."""
+    task = _first_task(client, search="P0081", specialty="PCP")
+    url = f"/api/tasks/{task['task_id']}/state"
+    client.patch(url, params={"role": "CLINICAL"}, json={"assignee": "Devon Park"})
+    body = client.patch(url, params={"role": "CLINICAL"}, json={"note": "second call"}).json()
+    assert body["assignee"] == "Devon Park"
+    assert body["note"] == "second call"
+
+
+def test_a_role_cannot_write_to_a_task_it_cannot_see(client):
+    """Authorisation on the write path, not just on reads.
+
+    A scheduler cannot see referral tasks, so it must not be able to claim one
+    either -- and the response is the same 404 it would get for a task that does
+    not exist, so this cannot be used to discover hidden work.
+    """
+    referral = _first_task(client, task_type="REFERRAL")
+    denied = client.patch(
+        f"/api/tasks/{referral['task_id']}/state",
+        params={"role": "SCHEDULER"},
+        json={"status": "IN_PROGRESS"},
+    )
+    assert denied.status_code == 404
+
+    allowed = client.patch(
+        f"/api/tasks/{referral['task_id']}/state",
+        params={"role": "CLINICAL"},
+        json={"status": "IN_PROGRESS"},
+    )
+    assert allowed.status_code == 200
+
+
+def test_completion_cannot_be_set_by_hand(client):
+    """Completion is a clinical fact, derived from the encounter feed.
+
+    Allowing staff to tick a box is how a worklist drifts away from what
+    actually happened to the patient.
+    """
+    task = _first_task(client)
+    refused = client.patch(
+        f"/api/tasks/{task['task_id']}/state",
+        params={"role": "CLINICAL"},
+        json={"status": "COMPLETED"},
+    )
+    assert refused.status_code == 422
+
+
+def test_human_state_survives_the_engine_regenerating_tasks(client):
+    """The whole reason this table is keyed the way it is.
+
+    Task rows are destroyed and recreated on every run. State is stored against
+    the natural key -- patient, action, specialty -- so it reattaches to the
+    regenerated task rather than being orphaned.
+    """
+    from app.bootstrap import rebuild_database
+    from app.services.runs import ensure_run
+    from app.db.session import session_scope
+    from app.settings import settings
+
+    task = _first_task(client, search="P0149", specialty="PCP")
+    client.patch(
+        f"/api/tasks/{task['task_id']}/state",
+        params={"role": "CLINICAL"},
+        json={"assignee": "Priya Nair", "note": "survives a rebuild"},
+    )
+
+    # Nuke and rebuild everything, exactly as a restart would.
+    rules, _ = rebuild_database()
+    with session_scope() as session:
+        ensure_run(session, settings.default_as_of, rules)
+
+    after = _first_task(client, search="P0149", specialty="PCP")
+    assert after["state"]["assignee"] == "Priya Nair"
+    assert after["state"]["note"] == "survives a rebuild"

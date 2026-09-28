@@ -43,6 +43,14 @@ export interface TaskSource {
   tier_name: string | null;
 }
 
+export interface TaskState {
+  status: string;
+  assignee: string | null;
+  note: string | null;
+  updated_at: string | null;
+  updated_by_role: Role | null;
+}
+
 export interface Task {
   task_id: number;
   patient_id: string;
@@ -56,6 +64,8 @@ export interface Task {
   status: string;
   program_codes: string[];
   sources: TaskSource[];
+  /** Human-owned half. Null until somebody touches the task. */
+  state: TaskState | null;
   patient: PatientSummary | null;
 }
 

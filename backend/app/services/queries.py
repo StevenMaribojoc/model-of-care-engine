@@ -33,6 +33,7 @@ from app.services.views import (
     RunInfo,
     SummaryView,
     TaskSource,
+    TaskStateView,
     TaskView,
 )
 
@@ -184,9 +185,16 @@ def list_tasks(
     ).all()
 
     sources_by_task = _sources_for_tasks(session, [task.id for task, _ in rows])
+    state_by_key = _state_for_tasks(session, [task for task, _ in rows])
 
     items = [
-        _to_task_view(task, patient, as_of, sources_by_task.get(task.id, []))
+        _to_task_view(
+            task,
+            patient,
+            as_of,
+            sources_by_task.get(task.id, []),
+            state_by_key.get((task.patient_id, task.task_type, task.need_type, task.target)),
+        )
         for task, patient in rows
     ]
     return Page(total=total or 0, limit=limit, offset=offset, items=items)
@@ -225,6 +233,37 @@ def _apply_task_filters(
             ).where(db.RiskTier.code == tier)
         query = query.where(link.exists())
     return query
+
+
+def _state_for_tasks(
+    session: Session, tasks: list[db.Task]
+) -> dict[tuple[str, str, str, str], TaskStateView]:
+    """Look up human state for a page of tasks, by natural key.
+
+    Deliberately not a join on task.id. Task rows are regenerated with fresh ids
+    on every run, so an id-based link would break the moment the engine re-ran.
+    Matching on what the work *is* -- patient, action, specialty -- is what lets
+    a note written yesterday still be attached to the same job today.
+    """
+    if not tasks:
+        return {}
+    keys = {(t.patient_id, t.task_type, t.need_type, t.target) for t in tasks}
+    rows = session.scalars(
+        select(db.TaskState).where(
+            db.TaskState.patient_id.in_({k[0] for k in keys})
+        )
+    ).all()
+    return {
+        row.natural_key: TaskStateView(
+            status=row.status,
+            assignee=row.assignee,
+            note=row.note,
+            updated_at=row.updated_at.isoformat() if row.updated_at else None,
+            updated_by_role=row.updated_by_role,
+        )
+        for row in rows
+        if row.natural_key in keys
+    }
 
 
 def _sources_for_tasks(
@@ -558,7 +597,11 @@ def _to_patient_summary(patient: db.Patient, as_of: date) -> PatientSummary:
 
 
 def _to_task_view(
-    task: db.Task, patient: db.Patient, as_of: date, sources: list[TaskSource]
+    task: db.Task,
+    patient: db.Patient,
+    as_of: date,
+    sources: list[TaskSource],
+    state: TaskStateView | None = None,
 ) -> TaskView:
     return TaskView(
         task_id=task.id,
@@ -573,6 +616,7 @@ def _to_task_view(
         status=task.status,
         program_codes=sorted({source.program_code for source in sources}),
         sources=sources,
+        state=state,
         patient=_to_patient_summary(patient, as_of),
     )
 
@@ -663,9 +707,106 @@ def _tasks_for(
         .order_by(db.Task.priority, db.Task.due_date)
     ).all()
     sources_by_task = _sources_for_tasks(session, [task.id for task, _ in rows])
+    state_by_key = _state_for_tasks(session, [task for task, _ in rows])
     grouped: dict[str, list[TaskView]] = defaultdict(list)
     for task, patient in rows:
         grouped[task.patient_id].append(
-            _to_task_view(task, patient, as_of, sources_by_task.get(task.id, []))
+            _to_task_view(
+                task,
+                patient,
+                as_of,
+                sources_by_task.get(task.id, []),
+                state_by_key.get(
+                    (task.patient_id, task.task_type, task.need_type, task.target)
+                ),
+            )
         )
     return grouped
+
+
+# --------------------------------------------------------------------------- #
+# Human state (prototype)
+# --------------------------------------------------------------------------- #
+
+ALLOWED_TASK_STATUSES = ("OPEN", "IN_PROGRESS", "SNOOZED")
+
+
+def set_task_state(
+    session: Session,
+    *,
+    run_id: int,
+    rules: RulesBundle,
+    role: Role,
+    task_id: int,
+    status: str | None = None,
+    assignee: str | None = None,
+    note: str | None = None,
+) -> TaskStateView | None:
+    """Record what a person did about a task. Upsert on the natural key.
+
+    Returns None when the task does not exist in this run or the role may not
+    see it -- the same answer either way, so this cannot be used to probe for
+    the existence of tasks the caller is not allowed to know about.
+
+    Note the deliberate absence of a "completed" status. Completion is a
+    clinical fact: the visit lands in the encounter feed, the need becomes
+    satisfied, and the engine stops generating the task. Letting staff tick a
+    box instead is exactly how a worklist drifts away from reality.
+    """
+    task = session.get(db.Task, task_id)
+    if task is None or task.run_id != run_id:
+        return None
+    # Authorisation, same rule as every read: you cannot act on work your role
+    # is not allowed to see.
+    if task.task_type not in visible_task_types(rules, role):
+        return None
+
+    if status is not None and status not in ALLOWED_TASK_STATUSES:
+        raise ValueError(
+            f"unknown status {status!r}; expected one of {ALLOWED_TASK_STATUSES}"
+        )
+
+    row = session.scalar(
+        select(db.TaskState).where(
+            db.TaskState.patient_id == task.patient_id,
+            db.TaskState.task_type == task.task_type,
+            db.TaskState.need_type == task.need_type,
+            db.TaskState.target == task.target,
+        )
+    )
+    if row is None:
+        row = db.TaskState(
+            patient_id=task.patient_id,
+            task_type=task.task_type,
+            need_type=task.need_type,
+            target=task.target,
+        )
+        session.add(row)
+
+    # Only overwrite what was actually supplied, so setting a note does not
+    # silently clear an assignee.
+    if status is not None:
+        row.status = status
+    if assignee is not None:
+        row.assignee = assignee or None
+    if note is not None:
+        row.note = note or None
+    row.updated_by_role = role.value
+    # updated_at is maintained by the column's onupdate, so it cannot drift
+    # from what the database thinks the write time was.
+
+    session.commit()
+    return TaskStateView(
+        status=row.status,
+        assignee=row.assignee,
+        note=row.note,
+        updated_at=row.updated_at.isoformat() if row.updated_at else None,
+        updated_by_role=row.updated_by_role,
+    )
+
+
+def clear_task_state(session: Session) -> int:
+    """Wipe all human state. Used by the demo reset only."""
+    rows = session.query(db.TaskState).delete()
+    session.commit()
+    return rows

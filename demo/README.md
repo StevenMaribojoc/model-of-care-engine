@@ -44,6 +44,24 @@ merges until a third one overlaps.
 ./demo/reset.sh
 ```
 
+## Show that human state survives re-derivation
+
+```bash
+./demo/claim-task.sh
+./demo/reset.sh
+```
+
+Assigns a task, sets a status, writes a note, then rebuilds the whole database
+from the CSVs and shows the note still attached to the regenerated task.
+
+Two things make that work. The state is keyed on what the work *is* --
+`(patient, task_type, need_type, target)` -- rather than on the task's row id,
+which is reassigned every run. And `task_state` is excluded from the startup
+rebuild, because it is the only table here that cannot be recomputed from
+`data/*.csv` and `config/*.yaml`.
+
+Prototype, not a task manager. See the README for what a real lifecycle needs.
+
 ## Keep run history across restarts
 
 ```bash

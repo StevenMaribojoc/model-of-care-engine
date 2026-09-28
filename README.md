@@ -74,7 +74,7 @@ local path (273 tasks, same tier distribution).
 ### Tests
 
 ```bash
-cd backend && ../.venv/bin/python -m pytest -q     # 49 tests, ~1s
+cd backend && ../.venv/bin/python -m pytest -q     # 55 tests, ~1s
 ```
 
 ---
@@ -175,12 +175,22 @@ Where the spec was ambiguous, I made a call and recorded it.
 
 ## Where I cut corners, and why
 
-- **Tasks have no lifecycle.** Every run regenerates them; there is no "in
-  progress", no assignee, and no persistence of status across runs. This is the
-  largest omission and a deliberate one — a real task lifecycle is a feature in
-  its own right, and the case study asks for generation. The schema is ready for
-  it: tasks have a natural key of `(patient, task_type, need_type, target)` to
-  upsert against.
+- **Task lifecycle is a prototype, not a feature.** A task can be claimed, given
+  a status, and annotated (`PATCH /api/tasks/{id}/state`), and that state
+  survives the engine regenerating every task — it is stored against the natural
+  key `(patient, task_type, need_type, target)` rather than the row id, and
+  `task_state` is excluded from the startup rebuild because it is the only table
+  here that is not derived from source. What is missing is the rest of a real
+  lifecycle: reconciling derived tasks against open ones on each run
+  (create / keep / auto-close with a reason), an audit trail of who changed
+  what, and a real staff directory instead of four hardcoded names. The brief
+  asks for task *generation*, so this exists to show the model supports a
+  lifecycle rather than to be one.
+
+  Note what a person deliberately cannot set: **completed**. Completion is a
+  clinical fact — the visit lands in the encounter feed, the need becomes
+  satisfied, and the task stops being generated. A tick box would let the
+  worklist drift away from what actually happened to the patient.
 - **The whole population is loaded into memory** to evaluate. Correct for 300
   patients and fine for a single tenant; the fix is to stream in id-ordered
   chunks, which works because patients are evaluated independently.
@@ -190,7 +200,7 @@ Where the spec was ambiguous, I made a call and recorded it.
 - **SQLite and no migrations.** The database is rebuilt from the CSVs at startup.
   The models are plain SQLAlchemy with no dialect-specific types and port to MSSQL
   by changing the URL; a real deployment needs Alembic.
-- **Test coverage is targeted, not broad.** 49 tests aimed at the boundaries the
+- **Test coverage is targeted, not broad.** 55 tests aimed at the boundaries the
   dataset cannot observe and at role visibility. I mutation-checked the important
   ones (reverting the ICD fix, relaxing the cadence to `>=`, letting a never-seen
   PCP produce a referral, making visibility ignore the role) to confirm they

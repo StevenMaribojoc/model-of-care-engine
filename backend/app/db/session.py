@@ -35,13 +35,30 @@ def _enable_sqlite_foreign_keys(dbapi_connection, _record) -> None:
         cursor.close()
 
 
-def reset_schema() -> None:
-    """Drop and recreate every table.
+# Tables that are NOT rebuilt from source, because they are not derived from it.
+# Everything else in this database can be reconstructed from data/*.csv and
+# config/*.yaml; what a person typed cannot be.
+PRESERVED_TABLES = {"task_state"}
 
-    The database is a derived artifact rebuilt from the CSVs at startup, so there
-    are no migrations to run. A real deployment would use Alembic instead.
+
+def reset_schema() -> None:
+    """Rebuild the schema from scratch, preserving human-owned tables.
+
+    The database is a derived artifact, so there are no migrations to run and
+    dropping everything is the simplest correct thing -- with one exception.
+    Human state (who claimed a task, what they wrote on it) is the only content
+    here that cannot be recomputed from the CSVs and the YAML, so it survives
+    the rebuild. That asymmetry is the point rather than an oversight: a nightly
+    re-evaluation must never erase the work people did during the day.
+
+    A real deployment would use Alembic and would not drop anything.
     """
-    Base.metadata.drop_all(engine)
+    droppable = [
+        table
+        for table in reversed(Base.metadata.sorted_tables)
+        if table.name not in PRESERVED_TABLES
+    ]
+    Base.metadata.drop_all(engine, tables=droppable)
     Base.metadata.create_all(engine)
 
 

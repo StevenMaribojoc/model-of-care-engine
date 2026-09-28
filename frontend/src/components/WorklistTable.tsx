@@ -1,6 +1,10 @@
 import type { Task } from "../types";
 import { Empty, Overdue, PriorityDot, TaskTypeBadge } from "./ui";
 
+function formatStatus(status: string): string {
+  return status === "IN_PROGRESS" ? "In progress" : status.charAt(0) + status.slice(1).toLowerCase();
+}
+
 /** Task-centric view: one row is one piece of work for one staff member. */
 export function WorklistTable({
   tasks,
@@ -35,6 +39,7 @@ export function WorklistTable({
               <th>Specialty</th>
               <th>Due</th>
               <th>Overdue</th>
+              <th>Who has it</th>
               <th>Driven by</th>
             </tr>
           </thead>
@@ -62,6 +67,19 @@ export function WorklistTable({
                 <td>{task.due_date ?? "—"}</td>
                 <td>
                   <Overdue days={task.days_overdue} />
+                </td>
+                <td>
+                  {/* Human-owned. Blank for almost every row, because nobody has
+                      picked it up yet. */}
+                  {task.state?.assignee ? (
+                    <>
+                      {task.state.assignee}
+                      <div className="sub">{formatStatus(task.state.status)}</div>
+                    </>
+                  ) : (
+                    <span className="muted">—</span>
+                  )}
+                  {task.state?.note && <div className="sub note">"{task.state.note}"</div>}
                 </td>
                 <td className="sub">
                   {/* Names the tier, not just the program: the priority column

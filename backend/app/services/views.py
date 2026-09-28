@@ -65,6 +65,17 @@ class TaskSource:
 
 
 @dataclass(frozen=True)
+class TaskStateView:
+    """The human-owned half of a task. None everywhere until someone touches it."""
+
+    status: str
+    assignee: str | None
+    note: str | None
+    updated_at: str | None
+    updated_by_role: str | None
+
+
+@dataclass(frozen=True)
 class TaskView:
     task_id: int
     patient_id: str
@@ -80,6 +91,8 @@ class TaskView:
     # task can be demanded by several.
     program_codes: list[str]
     sources: list[TaskSource] = field(default_factory=list)
+    # Survives re-derivation: matched by natural key, not by task id.
+    state: TaskStateView | None = None
     patient: PatientSummary | None = None
 
 
